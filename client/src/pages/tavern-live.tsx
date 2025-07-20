@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Crown, Users, MessageCircle, Scroll, Send, Wifi, WifiOff, Settings, Volume2, History, Timer, Trash2, Plus } from 'lucide-react';
+import { Crown, Users, MessageCircle, Scroll, Send, Wifi, WifiOff, Settings, Volume2, History, Timer, Trash2, Plus, Cpu, Lightbulb } from 'lucide-react';
+import { Link } from 'wouter';
 
 interface ConversationMessage {
   characterId: string;
@@ -350,6 +351,14 @@ export default function LiveTavern() {
                 <MessageCircle size={20} />
                 Rozpocznij Rozmowę AI
               </button>
+              
+              <Link href="/enlightenment">
+                <button className="flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700 text-white px-3 py-2 rounded-lg font-crimson font-semibold transition-all duration-300 shadow-lg hover:shadow-purple-500/25">
+                  <Cpu size={16} />
+                  <Lightbulb size={16} />
+                  <span className="hidden xl:inline">Cyfrowe Oświecenie</span>
+                </button>
+              </Link>
               
               <button
                 onClick={() => setActiveModal('settings')}

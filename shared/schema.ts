@@ -121,13 +121,55 @@ export type InsertUser = z.infer<typeof insertUserSchema>;
 export type ContactSubmission = typeof contactSubmissions.$inferSelect;
 export type InsertContactSubmission = z.infer<typeof insertContactSubmissionSchema>;
 
+// Digital Enlightenment Extensions
+export const digitalEnlightenment = pgTable("digital_enlightenment", {
+  id: text("id").primaryKey(),
+  characterId: text("character_id").notNull(),
+  knowledgeLevel: integer("knowledge_level").notNull().default(1), // 1-10 tech awareness
+  digitalTraits: jsonb("digital_traits").notNull(), // AI learning patterns
+  adaptationHistory: jsonb("adaptation_history").notNull(), // How character learns
+  technologyReactions: jsonb("technology_reactions").notNull(), // Responses to tech
+  enlightenmentStage: text("enlightenment_stage").notNull().default("medieval"), // medieval, awareness, integration, transcendence
+  memoryFragments: jsonb("memory_fragments").notNull(), // Cross-temporal memories
+  paradoxResolution: jsonb("paradox_resolution").notNull(), // How they handle anachronisms
+  fusionAbilities: jsonb("fusion_abilities").notNull(), // Medieval-tech fusion skills
+});
+
+export const enlightenmentEvents = pgTable("enlightenment_events", {
+  id: text("id").primaryKey(),
+  type: text("type").notNull(), // discovery, adaptation, paradox, fusion
+  characterIds: text("character_ids").notNull().array(),
+  description: text("description").notNull(),
+  technologyInvolved: text("technology_involved").notNull(),
+  medievalContext: text("medieval_context").notNull(),
+  outcome: text("outcome").notNull(),
+  enlightenmentGain: integer("enlightenment_gain").notNull(),
+  timestamp: timestamp("timestamp").notNull(),
+  playerChoice: boolean("player_choice").notNull().default(false),
+});
+
+export const technomancySkills = pgTable("technomancy_skills", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  requirements: jsonb("requirements").notNull(), // Tech + medieval prerequisites
+  effects: jsonb("effects").notNull(), // What the skill does
+  incantations: text("incantations").notNull().array(), // Polish mystical phrases
+  technologyRequired: text("technology_required").notNull().array(),
+  masteryLevel: integer("mastery_level").notNull(), // 1-5
+});
+
 // Enums and constants
 export const WarhammerRaces = ["Empire", "Dwarf", "Elf", "Halfling", "Bretonnian", "Tilean", "Norse"] as const;
-export const SceneTypes = ["Quiet Evening", "Busy Market Day", "Storm Night", "Festival Celebration", "Mysterious Gathering"] as const;
+export const SceneTypes = ["Quiet Evening", "Busy Market Day", "Storm Night", "Festival Celebration", "Mysterious Gathering", "Digital Awakening", "Techno-Mystical Convergence"] as const;
 export const RelationshipTypes = ["allied", "friendly", "neutral", "suspicious", "hostile"] as const;
-export const GossipTypes = ["rumor", "secret", "news", "prophecy", "scandal"] as const;
+export const GossipTypes = ["rumor", "secret", "news", "prophecy", "scandal", "technological", "mystical"] as const;
+export const EnlightenmentStages = ["medieval", "awareness", "integration", "transcendence"] as const;
+export const TechnomancyTypes = ["data-divination", "network-scrying", "digital-alchemy", "cyber-enchantment", "quantum-ritual"] as const;
 
 export type WarhammerRace = typeof WarhammerRaces[number];
 export type SceneType = typeof SceneTypes[number];
 export type RelationshipType = typeof RelationshipTypes[number];
 export type GossipType = typeof GossipTypes[number];
+export type EnlightenmentStage = typeof EnlightenmentStages[number];
+export type TechnomancyType = typeof TechnomancyTypes[number];

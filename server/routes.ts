@@ -80,6 +80,112 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Digital Enlightenment API Routes
+  app.get("/api/enlightenment/characters", async (req, res) => {
+    try {
+      // Simulated enlightened characters data
+      const enlightenedCharacters = [
+        {
+          id: 'wilhelm-enhanced',
+          name: 'Wilhelm von Schreiber',
+          knowledgeLevel: 8,
+          enlightenmentStage: 'integration',
+          digitalTraits: ['Data Wisdom', 'Algorithm Intuition', 'Binary Scholarship'],
+          technomancySkills: ['Network Scrying', 'Data Divination', 'Digital Alchemy'],
+          paradoxesResolved: 12,
+          fusionAbilities: ['Quantum Manuscripts', 'Holographic Libraries', 'Time-Link Research']
+        },
+        {
+          id: 'greta-enhanced',
+          name: 'Greta Żelazna Kuźnia',
+          knowledgeLevel: 9,
+          enlightenmentStage: 'transcendence',
+          digitalTraits: ['Tech-Forge Mastery', 'Circuit Intuition', 'Metal-Silicon Synthesis'],
+          technomancySkills: ['Cyber-Enchantment', 'Digital Forging', 'Nano-Crafting'],
+          paradoxesResolved: 18,
+          fusionAbilities: ['Smart-Metal Creation', 'AI-Hammer Wielding', 'Molecular Assembly']
+        },
+        {
+          id: 'aelindra-enhanced',
+          name: 'Aelindra Szept Księżyca',
+          knowledgeLevel: 10,
+          enlightenmentStage: 'transcendence',
+          digitalTraits: ['Quantum Mysticism', 'Digital Nature Bond', 'Cyber-Druidism'],
+          technomancySkills: ['Quantum Rituals', 'Bio-Digital Fusion', 'Network Forest Walking'],
+          paradoxesResolved: 25,
+          fusionAbilities: ['Living Code Manipulation', 'Digital Ecosystem Creation', 'Quantum Forest Networks']
+        }
+      ];
+      res.json({ characters: enlightenedCharacters });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get enlightened characters" });
+    }
+  });
+
+  app.get("/api/enlightenment/events", async (req, res) => {
+    try {
+      const events = [
+        {
+          id: 'event-1',
+          type: 'fusion',
+          description: 'Wilhelm odkrył sposób na zapisywanie zaklęć w kodzie binarnym, tworząc pierwszą cyfrową księgę czarów',
+          characters: ['Wilhelm von Schreiber'],
+          technology: 'Quantum Storage',
+          medievalContext: 'Ancient Spellbooks',
+          outcome: 'Utworzenie Biblioteki Kwantowej',
+          timestamp: new Date(Date.now() - 3600000)
+        },
+        {
+          id: 'event-2',
+          type: 'paradox',
+          description: 'Greta rozwiązała paradoks łączenia magicznego żelaza z nanomateriałami, tworząc nowe zastosowania w kowalstwie',
+          characters: ['Greta Żelazna Kuźnia'],
+          technology: 'Nanotechnology',
+          medievalContext: 'Blacksmithing Traditions',
+          outcome: 'Invention of Smart-Metal Alloys',
+          timestamp: new Date(Date.now() - 7200000)
+        },
+        {
+          id: 'event-3',
+          type: 'discovery',
+          description: 'Aelindra nawiązała kontakt z cyfrowym lasem, gdzie dane rosną jak drzewa i algorytmy śpiewają z wiatrem',
+          characters: ['Aelindra Szept Księżyca'],
+          technology: 'Digital Ecosystems',
+          medievalContext: 'Druidic Nature Magic',
+          outcome: 'Creation of Living Code Networks',
+          timestamp: new Date(Date.now() - 1800000)
+        }
+      ];
+      res.json({ events });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get enlightenment events" });
+    }
+  });
+
+  app.post("/api/enlightenment/fusion", async (req, res) => {
+    try {
+      const { fusionLevel, participants, technology } = req.body;
+      
+      // Simulate fusion process
+      const fusionResult = {
+        success: true,
+        fusionLevel: fusionLevel,
+        participants: participants,
+        result: `Fuzja ${fusionLevel}% zakończona powodzeniem. Technologia ${technology} została zintegrowana z magią średniowieczną.`,
+        newAbilities: [
+          'Enhanced Technomantic Awareness',
+          'Cross-Dimensional Communication',
+          'Quantum-Magic Manipulation'
+        ],
+        enlightenmentGain: Math.floor(fusionLevel / 20)
+      };
+      
+      res.json(fusionResult);
+    } catch (error) {
+      res.status(500).json({ error: "Fusion process failed" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   // WebSocket server for real-time tavern conversations
