@@ -1,0 +1,167 @@
+Create "Warhammer Fantasy Tavern" - a comprehensive React-based web application that simulates an immersive fantasy tavern environment with AI-powered character interactions, building upon the established Suplementor V2 architecture and development patterns.
+
+**Core Narrative Requirements:**
+- Implement dynamic scene generation with 5 distinct tavern atmospheres: "Quiet Evening", "Busy Market Day", "Storm Night", "Festival Celebration", "Mysterious Gathering"
+- Create branching dialogue trees with minimum 3 response options per character interaction
+- Develop interconnected story threads (wątki) that evolve based on player choices and character relationships
+- Generate contextual gossip (plotki) system where characters share rumors, secrets, and local news that influence ongoing narratives
+- Ensure all scenes, dialogues, story threads, and gossip content is delivered in Polish as the primary language
+
+**Project Foundation & Architecture:**
+- Initialize new React 18 + TypeScript project using Vite with identical configuration to Suplementor V2
+- Implement standardized folder structure: `/src/components/tavern/`, `/src/stores/tavernStore.ts`, `/src/types/warhammer.types.ts`, `/src/hooks/useTavern.ts`
+- Extend existing Suplementor V2 UI component library (Button, Card, Input, etc.) with tavern-specific components
+- Configure Tailwind CSS with custom Warhammer Fantasy theme extending the base configuration
+- Set up Polish language support as PRIMARY language using react-i18next with fantasy-appropriate terminology
+
+**Character System Implementation (Priority 1 - Critical):**
+Define exactly 17 Warhammer Fantasy characters with complete specifications, ensuring each character contributes to scenes, dialogues, story threads, and gossip generation:
+
+*Empire Characters (3):*
+- Captain Marcus Steiner: Grizzled veteran soldier, pragmatic, distrusts magic, speaks in military terms, shares war stories and tactical gossip
+- Wilhelm the Scribe: Scholarly chronicler, verbose, curious about lore, uses formal academic language, spreads historical rumors and scholarly debates
+- Greta Ironforge: Master blacksmith, direct, proud of craft, speaks with technical precision, gossips about weapon orders and noble clients
+
+*Dwarf Characters (3):*
+- Thorek Ironbeard: Veteran ranger, taciturn, suspicious of outsiders, uses clan oaths in speech, shares mountain dangers and clan politics
+- Balin Goldseeker: Shrewd merchant, calculating, gold-obsessed, speaks in trade terminology, spreads market rumors and trade route gossip
+- Grimm Oathkeeper: Honor-bound warrior, traditional, speaks of ancestors and grudges, shares clan histories and honor disputes
+
+*Elf Characters (3):*
+- Aelindra Moonwhisper: High Elf mage, aloof, intellectually superior, uses archaic formal speech, discusses magical phenomena and ancient prophecies
+- Silvyr Swiftarrow: Wood Elf scout, nature-focused, distrusts civilization, speaks in forest metaphors, shares wilderness dangers and nature omens
+- Malekith's Exile: Dark Elf rogue, bitter, cynical, uses cutting sarcasm and veiled threats, spreads dark rumors and political intrigue
+
+*Halfling Characters (3):*
+- Rosie Greenhill: Tavern keeper, motherly, gossip-loving, speaks warmly with local idioms, central hub for all tavern gossip and local news
+- Pip Lightfingers: Reformed burglar, nervous, quick-witted, uses thieves' cant occasionally, shares underworld rumors and heist stories
+- Merry Goodbarrel: Head cook, jolly, food-obsessed, speaks in culinary metaphors, gossips about ingredient sources and noble dining preferences
+
+*Human Variants (3):*
+- Sir Gaston de Montfort: Bretonnian knight, chivalrous, honor-bound, speaks in courtly manner, shares tales of chivalric quests and court intrigue
+- Lorenzo Medici: Tilean merchant, smooth-talking, opportunistic, uses business terminology, spreads trade gossip and political machinations
+- Erik Bloodaxe: Norse berserker, boisterous, battle-hungry, speaks of glory and death, shares battle stories and warrior challenges
+
+*Unique Characters (2):*
+- Victor Saltzpyre: Witch Hunter, fanatical, suspicious, speaks in religious zealotry, investigates corruption and shares heresy rumors
+- Sienna Fuegonasus: Bright Wizard, passionate, fire-obsessed, speaks with magical terminology, discusses magical experiments and arcane gossip
+
+**Enhanced Character Data Structure Requirements:**
+```typescript
+interface TavernCharacter {
+  id: string;
+  name: string;
+  race: WarhammerRace;
+  class: string;
+  personalityTraits: [string, string, string, string, string]; // Exactly 5 traits
+  backstory: string; // Exactly 200 words in Polish
+  speechPatterns: {
+    dialect: string;
+    vocabulary: string[];
+    tone: 'formal' | 'casual' | 'aggressive' | 'friendly' | 'mysterious';
+    catchphrases: string[]; // In Polish
+  };
+  relationships: Record<string, RelationshipType>; // With all other 16 characters
+  conversationPreferences: {
+    favoriteTopics: string[];
+    avoidedTopics: string[];
+    initiationLikelihood: number; // 0-1 probability of starting conversations
+  };
+  narrativeRoles: {
+    scenePreferences: SceneType[]; // Which scenes this character appears in
+    storyThreadInvolvement: string[]; // Which ongoing plots they participate in
+    gossipCategories: GossipType[]; // Types of gossip they share/seek
+    dialogueComplexity: 'simple' | 'moderate' | 'complex'; // Branching dialogue depth
+  };
+}
+```
+
+**Real-Time Conversation Engine with Narrative Integration (Priority 2 - Critical):**
+- Implement scene-aware conversation orchestrator:
+  * Scene-specific conversation triggers (different timing for each scene type)
+  * Story thread progression through character interactions
+  * Gossip propagation system where rumors spread between characters
+  * Dynamic dialogue branching based on player choices and relationship history
+- Enhanced conversation flow management:
+  * Scene context influences conversation topics and character availability
+  * Story thread continuity maintained across multiple conversation sessions
+  * Gossip verification system where characters confirm/deny rumors
+  * Player dialogue choices that affect character relationships and story outcomes
+- Comprehensive memory system using IndexedDB:
+  ```typescript
+  interface ConversationRecord {
+    id: string;
+    timestamp: Date;
+    sceneContext: SceneType;
+    participants: string[];
+    messages: ConversationMessage[];
+    topicTags: string[];
+    emotionalTone: 'positive' | 'negative' | 'neutral';
+    plotRelevanceScore: number; // 0-10
+    storyThreadIds: string[];
+    gossipGenerated: GossipItem[];
+    playerChoices: PlayerDialogueChoice[];
+  }
+  ```
+
+**Dynamic Story Generation & Narrative Persistence (Priority 3):**
+- Multi-layered story system:
+  * Scene-driven narratives that change based on tavern atmosphere
+  * Character-driven story threads that evolve through dialogue interactions
+  * Gossip-driven plot hooks that create new story opportunities
+  * Player choice consequences that affect future scenes and character availability
+- Advanced persistence requirements:
+  * Scene state tracking (which scenes have been experienced, character reactions)
+  * Dialogue choice history with branching path visualization
+  * Story thread progression tracking with multiple possible outcomes
+  * Gossip accuracy tracking (true/false rumors and their sources)
+  * Character relationship evolution with detailed interaction history
+
+**Polish Language Implementation (HIGHEST PRIORITY):**
+- Complete Polish localization for all narrative content:
+  * Scene descriptions and atmospheric text in immersive Polish
+  * Character dialogue with appropriate medieval/fantasy register and regional dialects
+  * Story thread narration in engaging Polish prose
+  * Gossip content with authentic Polish colloquialisms and tavern speech patterns
+- Specialized translation namespaces:
+  * `tavern.scenes` - Scene descriptions and atmospheric elements
+  * `tavern.dialogues` - Character speech and player response options
+  * `tavern.stories` - Story thread narration and plot descriptions
+  * `tavern.gossip` - Rumor content and gossip categories
+  * Minimum 1000 translation keys covering all narrative content
+
+**Enhanced UI/UX Design System for Narrative Experience:**
+- Scene-specific visual themes:
+  * Dynamic background changes based on current scene
+  * Character positioning and availability indicators
+  * Story thread progress visualization
+  * Gossip network relationship mapping
+- Interactive narrative elements:
+  * Dialogue choice buttons with consequence previews
+  * Story thread timeline with branching visualizations
+  * Character relationship status indicators
+  * Gossip credibility and source tracking displays
+
+**Core Narrative Features with Acceptance Criteria:**
+1. Scene Browser: Navigate between different tavern atmospheres with smooth transitions
+2. Dialogue System: Branching conversations with meaningful player choices and consequences
+3. Story Thread Tracker: Visual representation of ongoing plots and player's role in them
+4. Gossip Network: Interactive map showing how rumors spread between characters
+5. Character Relationship Matrix: Dynamic visualization of evolving character relationships
+6. Narrative Export: Generate story summaries and character development reports in Polish
+
+**Success Criteria (Measurable with Narrative Focus):**
+- All 5 scene types provide unique atmospheric experiences with appropriate character interactions
+- Dialogue system supports minimum 3 branching paths per major conversation
+- Story threads maintain narrative coherence across 100+ player interactions
+- Gossip system generates contextually appropriate rumors that influence character behavior
+- Polish language implementation covers 100% of narrative content with authentic medieval fantasy tone
+- Player choices demonstrably affect story outcomes and character relationships in subsequent sessions
+
+**Development Phases with Narrative Deliverables:**
+- Phase 1 (Days 1-3): Character system with narrative roles, basic scene implementation, Polish dialogue foundation
+- Phase 2 (Days 4-6): Dialogue branching system, story thread mechanics, gossip propagation engine
+- Phase 3 (Days 7-9): Scene transitions, advanced story generation, narrative persistence
+- Phase 4 (Days 10-12): Polish language refinement for all narrative content, narrative coherence testing, story export functionality
+
+This enhanced specification ensures that scenes (sceny), dialogues (dialogi), story threads (wątki), and gossip (plotki) are central to the application's design and implementation, with Polish language as the primary delivery medium for all narrative content.
