@@ -167,7 +167,7 @@ export class ConversationEngine {
           },
           {
             role: "user", 
-            content: `Generate the next 2-3 messages in this conversation. Recent history:\n${conversationHistory}\n\nReturn ONLY a JSON array with this format: [{"characterId": "character-id", "message": "dialogue text", "timestamp": "current_timestamp"}]`
+            content: `Wygeneruj następne 2-3 wiadomości w tej rozmowie. Ostatnia historia:\n${conversationHistory}\n\nOdpowiedz TYLKO w formacie JSON: {"messages": [{"characterId": "character-id", "message": "tekst dialogu po polsku", "timestamp": "current_timestamp"}]}`
           }
         ],
         response_format: { type: "json_object" },
@@ -224,19 +224,19 @@ ${characterDescriptions}
 RELATIONSHIPS:
 ${relationships}
 
-RULES:
-1. Each character must speak in their unique style and personality
-2. Include Polish names and some Polish phrases naturally
-3. Reference Warhammer Fantasy lore (Empire, Chaos, Old World)
-4. Keep conversations natural and engaging
-5. Characters should react to each other based on their relationships
-6. Include medieval tavern atmosphere (sounds, smells, activities)
-7. Mix serious topics with lighter tavern banter
-8. Let personalities clash or harmonize naturally
+ZASADY:
+1. Każda postać MUSI mówić po polsku w swoim unikalnym stylu
+2. Używaj polskich imion i naturalnie wpliataj polskie wyrażenia
+3. Odwołuj się do mitologii Warhammer Fantasy (Imperium, Chaos, Stary Świat)
+4. Utrzymuj naturalne i wciągające rozmowy
+5. Postacie powinny reagować na siebie zgodnie ze swoimi relacjami
+6. Dołącz średniowieczną atmosferę tawerny (dźwięki, zapachy, działania)
+7. Mieszaj poważne tematy z lżejszymi pogadankami tawerny
+8. Pozwól osobowościom się ścierać lub harmonizować naturalnie
 
-Generate authentic dialogue that feels like real people in a fantasy tavern, not exposition. Make it engaging and true to each character.
+Generuj autentyczne dialogi w języku polskim, które brzmią jak prawdziwi ludzie w fantasy tawernie, nie ekspozycja. Niech będzie angażujące i wierne każdej postaci.
 
-IMPORTANT: Respond with a JSON object containing a "messages" array. Each message should have: characterId, message, timestamp.`;
+WAŻNE: Odpowiedz obiekt JSON zawierający tablicę "messages". Każda wiadomość powinna mieć: characterId, message (PO POLSKU), timestamp.`;
   }
 
   private formatConversationHistory(history: ConversationContext['conversationHistory']): string {
@@ -256,12 +256,12 @@ IMPORTANT: Respond with a JSON object containing a "messages" array. Each messag
     const fallbackMessages = [
       {
         characterId: participants[0].id,
-        message: `Dziwne czasy nastały... Słyszałem niepokojące wieści z północy.`,
+        message: `Dziwne czasy nastały... Słyszałem niepokojące wieści z północy. Coś się szykuje.`,
         timestamp: new Date()
       },
       {
         characterId: participants[1].id,
-        message: `Aye, coś się dzieje. Nawet konie są niespokojne ostatnio.`,
+        message: `Tak, czuję to w powietrzu. Nawet zwierzęta są niespokojne ostatnio. To nie jest dobry znak.`,
         timestamp: new Date(Date.now() + 3000)
       }
     ];
@@ -283,9 +283,9 @@ PERSONALITY: ${character.personality}
 SPEAKING STYLE: ${character.speakingStyle}
 BACKGROUND: ${character.background}
 
-Current scene: ${context.scene} - ${context.atmosphere}
+Obecna scena: ${context.scene} - ${context.atmosphere}
 
-Respond as this character would, staying true to their personality and speaking style. Keep responses concise (1-2 sentences). Include Polish phrases naturally if appropriate.`;
+Odpowiadaj jak ta postać, pozostając wiernym jej osobowości i stylowi mówienia. Odpowiadaj ZAWSZE PO POLSKU. Utrzymuj odpowiedzi zwięzłe (1-2 zdania). Używaj naturalnie polskich wyrażeń średniowiecznych.`;
 
     try {
       const response = await openai.chat.completions.create({

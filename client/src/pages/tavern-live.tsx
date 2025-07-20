@@ -259,7 +259,7 @@ export default function LiveTavern() {
                 className="flex items-center gap-2 bg-gold text-charcoal px-4 py-2 rounded-lg font-crimson font-semibold hover:bg-yellow-400 transition-colors duration-300 disabled:opacity-50"
               >
                 <MessageCircle size={20} />
-                Start AI Chat
+                Rozpocznij Rozmowę AI
               </button>
             </div>
           </div>
@@ -299,11 +299,36 @@ export default function LiveTavern() {
           <div className="p-6">
             <div className="glass-morphism rounded-lg">
               <div className="p-4 border-b border-gold border-opacity-30">
-                <h2 className="font-cinzel text-xl text-gold flex items-center gap-2">
-                  <MessageCircle size={24} />
-                  Live Tavern Conversations
-                  {wsConnected && <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>}
-                </h2>
+                <div className="flex justify-between items-center">
+                  <h2 className="font-cinzel text-xl text-gold flex items-center gap-2">
+                    <MessageCircle size={24} />
+                    Żywe Rozmowy w Tawernie
+                    {wsConnected && <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>}
+                  </h2>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setActiveModal('scenes')}
+                      className="text-sm bg-wood text-parchment px-3 py-1 rounded-lg hover:bg-opacity-80 transition-colors"
+                    >
+                      <Scroll size={16} className="inline mr-1" />
+                      Sceny
+                    </button>
+                    <button
+                      onClick={() => setActiveModal('stories')}
+                      className="text-sm bg-wood text-parchment px-3 py-1 rounded-lg hover:bg-opacity-80 transition-colors"
+                    >
+                      <Scroll size={16} className="inline mr-1" />
+                      Wątki
+                    </button>
+                    <button
+                      onClick={() => setActiveModal('gossip')}
+                      className="text-sm bg-wood text-parchment px-3 py-1 rounded-lg hover:bg-opacity-80 transition-colors"
+                    >
+                      <MessageCircle size={16} className="inline mr-1" />
+                      Plotki
+                    </button>
+                  </div>
+                </div>
               </div>
 
               {/* Conversation Display */}
@@ -316,8 +341,8 @@ export default function LiveTavern() {
                     <MessageCircle size={48} className="text-gold mb-4 opacity-50 mx-auto" />
                     <p className="font-crimson text-parchment opacity-80">
                       {wsConnected 
-                        ? "AI conversations will appear here automatically every 45 seconds..." 
-                        : "Connecting to tavern..."}
+                        ? "Rozmowy AI pojawią się tutaj automatycznie co 45 sekund..." 
+                        : "Łączenie z tawerną..."}
                     </p>
                   </div>
                 ) : (
@@ -336,7 +361,7 @@ export default function LiveTavern() {
                         <div className={`glass-morphism rounded-lg p-3 max-w-md ${isPlayer ? 'bg-gold bg-opacity-20' : ''}`}>
                           <div className="flex items-center gap-2 mb-1">
                             <span className="font-cinzel text-sm text-gold">
-                              {isPlayer ? 'You' : character?.name || msg.characterId}
+                              {isPlayer ? 'Ty' : character?.name || msg.characterId}
                             </span>
                             <span className="text-xs text-parchment opacity-60">
                               {msg.timestamp.toLocaleTimeString()}
@@ -365,7 +390,7 @@ export default function LiveTavern() {
                   >
                     {characters.map((char) => (
                       <option key={char.id} value={char.id}>
-                        Talk to {char.name}
+                        Rozmawiaj z {char.name}
                       </option>
                     ))}
                   </select>
@@ -376,7 +401,7 @@ export default function LiveTavern() {
                       value={userMessage}
                       onChange={(e) => setUserMessage(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && sendUserMessage()}
-                      placeholder="Type your message to characters..."
+                      placeholder="Napisz wiadomość do postaci..."
                       className="flex-1 bg-charcoal border border-gold border-opacity-30 rounded-lg px-4 py-2 text-parchment font-crimson text-sm focus:border-gold focus:outline-none"
                       disabled={!wsConnected}
                     />
@@ -400,7 +425,7 @@ export default function LiveTavern() {
             <div className="p-4 border-b border-gold border-opacity-30">
               <h2 className="font-cinzel text-xl text-gold mb-4 flex items-center gap-2">
                 <Users size={24} />
-                AI Characters ({characters.length})
+                Postacie AI ({characters.length})
               </h2>
             </div>
 
@@ -441,7 +466,7 @@ export default function LiveTavern() {
                     }}
                     className="w-full bg-gold text-charcoal py-2 px-3 rounded-lg font-crimson text-sm font-semibold hover:bg-yellow-400 transition-colors duration-300"
                   >
-                    Select for Chat
+                    Wybierz do Rozmowy
                   </button>
                 </div>
               ))}
@@ -450,12 +475,17 @@ export default function LiveTavern() {
         </div>
       </main>
 
-      {/* Character Detail Modal */}
-      {activeModal && activeModal.startsWith('character-') && (
+      {/* Modals */}
+      {activeModal && (
         <div className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-charcoal border-2 border-gold border-opacity-50 rounded-lg w-full max-w-2xl p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="font-cinzel text-2xl text-gold">Character Details</h2>
+              <h2 className="font-cinzel text-2xl text-gold">
+                {activeModal === 'scenes' ? 'Sceny Tawerny' :
+                 activeModal === 'stories' ? 'Wątki Fabularne' :
+                 activeModal === 'gossip' ? 'Plotki i Pogłoski' :
+                 'Szczegóły Postaci'}
+              </h2>
               <button
                 onClick={() => setActiveModal(null)}
                 className="text-gold hover:text-yellow-400 transition-colors text-xl"
@@ -465,50 +495,190 @@ export default function LiveTavern() {
             </div>
             
             <div className="font-crimson text-parchment">
-              {(() => {
-                const characterId = activeModal.split('-')[1];
-                const character = characters.find(c => c.id === characterId);
-                return character ? (
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="text-4xl">{getCharacterAvatar(character.id)}</div>
-                      <div>
-                        <h3 className="font-cinzel text-xl text-gold">{character.name}</h3>
-                        <p className="text-sm opacity-80">{character.race} {character.class}</p>
+              {activeModal === 'scenes' && (
+                <div className="space-y-4">
+                  <p className="mb-4">Wybierz scenę, aby zmienić atmosferę tawerny i wpłynąć na rozmowy AI:</p>
+                  {scenes.map((scene) => (
+                    <div key={scene.name} className="glass-morphism p-4 rounded-lg">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="font-cinzel text-lg text-gold">{scene.name}</h3>
+                        <button
+                          onClick={() => {
+                            sendSceneChange(scene.name);
+                            setActiveModal(null);
+                          }}
+                          className="bg-gold text-charcoal px-3 py-1 rounded text-sm hover:bg-yellow-400"
+                        >
+                          Wybierz
+                        </button>
                       </div>
+                      <p className="text-sm mb-2">{scene.description}</p>
+                      <span className="text-xs bg-wood px-2 py-1 rounded-full">{scene.atmosphere}</span>
                     </div>
-                    
-                    <div className="space-y-4">
-                      <div>
-                        <h4 className="text-gold font-semibold mb-2">Background</h4>
-                        <p className="text-sm">{character.background}</p>
-                      </div>
-                      
-                      <div>
-                        <h4 className="text-gold font-semibold mb-2">Personality</h4>
-                        <p className="text-sm">{character.personality}</p>
-                      </div>
-                      
-                      <div>
-                        <h4 className="text-gold font-semibold mb-2">Speaking Style</h4>
-                        <p className="text-sm">{character.speakingStyle}</p>
-                      </div>
+                  ))}
+                </div>
+              )}
+
+              {activeModal === 'stories' && (
+                <div className="space-y-4">
+                  <p className="mb-4">Aktualne wątki fabularne rozwijające się w tawernie:</p>
+                  
+                  <div className="glass-morphism p-4 rounded-lg">
+                    <h3 className="font-cinzel text-lg text-gold mb-2">Zagrożenie z Północy</h3>
+                    <p className="text-sm mb-3">
+                      Dziwne bestie pojawiają się na północnych granicach. Mieszkańcy mówią o strasznych wyciach w nocy. 
+                      Marcus Steiner przyniósł niepokojące raporty, a Wilhelm von Schreiber bada starożytne manuskrypty 
+                      szukając odpowiedzi.
+                    </p>
+                    <div className="flex gap-2 mb-3">
+                      <span className="text-xs bg-wood px-2 py-1 rounded-full">Aktywny</span>
+                      <span className="text-xs bg-red-800 px-2 py-1 rounded-full">Wysokie Zagrożenie</span>
                     </div>
-                    
-                    <div className="mt-6 pt-4 border-t border-gold border-opacity-30">
-                      <button
-                        onClick={() => {
-                          setSelectedCharacter(character.id);
-                          setActiveModal(null);
-                        }}
-                        className="w-full bg-gold text-charcoal py-3 px-4 rounded-lg font-crimson font-semibold hover:bg-yellow-400 transition-colors duration-300"
-                      >
-                        Start Conversation with {character.name}
-                      </button>
+                    <div className="text-xs text-gold">
+                      Uczestnicy: Marcus Steiner, Wilhelm von Schreiber
                     </div>
                   </div>
-                ) : <p>Character not found</p>;
-              })()}
+
+                  <div className="glass-morphism p-4 rounded-lg">
+                    <h3 className="font-cinzel text-lg text-gold mb-2">Zaginiony Kupiec</h3>
+                    <p className="text-sm mb-3">
+                      Lorenzo Złota Ręka nie wrócił z ostatniej podróży handlowej. Jego towar był cenny i budzi podejrzenia. 
+                      Greta Ironforge prowadzi nieoficjalne śledztwo.
+                    </p>
+                    <div className="flex gap-2 mb-3">
+                      <span className="text-xs bg-wood px-2 py-1 rounded-full">Aktywny</span>
+                      <span className="text-xs bg-yellow-800 px-2 py-1 rounded-full">Tajemnica</span>
+                    </div>
+                    <div className="text-xs text-gold">
+                      Uczestnicy: Greta Ironforge, Balin Goldseeker
+                    </div>
+                  </div>
+
+                  <div className="glass-morphism p-4 rounded-lg">
+                    <h3 className="font-cinzel text-lg text-gold mb-2">Starożytne Sekrety</h3>
+                    <p className="text-sm mb-3">
+                      Aelindra Moonwhisper odkryła niepokojące znaki w lesie. Natura sama ostrzega przed nadchodzącym zagrożeniem. 
+                      Czy to ma związek z północnymi bestiami?
+                    </p>
+                    <div className="flex gap-2 mb-3">
+                      <span className="text-xs bg-wood px-2 py-1 rounded-full">Nowy</span>
+                      <span className="text-xs bg-purple-800 px-2 py-1 rounded-full">Magia</span>
+                    </div>
+                    <div className="text-xs text-gold">
+                      Uczestnicy: Aelindra Moonwhisper
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeModal === 'gossip' && (
+                <div className="space-y-4">
+                  <p className="mb-4">Najświeższe plotki krążące po tawernie:</p>
+                  
+                  <div className="glass-morphism p-3 rounded-lg">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-gold text-sm font-semibold">🗨️ Plotka</span>
+                      <span className="text-xs opacity-60">30 minut temu</span>
+                    </div>
+                    <p className="text-sm">
+                      "Marcus widział dziwne ślady na północy od miasta. Nie są to ślady zwykłych zwierząt... 
+                      Coś większego i bardziej inteligentnego."
+                    </p>
+                    <div className="text-xs mt-2 opacity-80">
+                      Źródło: Marcus Steiner → Wilhelm von Schreiber
+                    </div>
+                  </div>
+
+                  <div className="glass-morphism p-3 rounded-lg">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-gold text-sm font-semibold">🤫 Sekret</span>
+                      <span className="text-xs opacity-60">2 godziny temu</span>
+                    </div>
+                    <p className="text-sm">
+                      "Lorenzo miał przy sobie dużo złota podczas ostatniej wizyty. Zbyt dużo jak na zwykłego kupca. 
+                      Skąd ma tyle bogactw?"
+                    </p>
+                    <div className="text-xs mt-2 opacity-80">
+                      Źródło: Greta Ironforge → Balin Goldseeker
+                    </div>
+                  </div>
+
+                  <div className="glass-morphism p-3 rounded-lg">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-gold text-sm font-semibold">📰 Wiadomości</span>
+                      <span className="text-xs opacity-60">4 godziny temu</span>
+                    </div>
+                    <p className="text-sm">
+                      "Aelindra spędza dużo czasu w lesie ostatnio. Mówi coś o 'znakach natury' i 'starożytnych ostrzeżeniach'. 
+                      Czy elfy wiedzą coś, czego my nie wiemy?"
+                    </p>
+                    <div className="text-xs mt-2 opacity-80">
+                      Źródło: Mieszkańcy tawerny
+                    </div>
+                  </div>
+
+                  <div className="glass-morphism p-3 rounded-lg">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="text-gold text-sm font-semibold">⚔️ Konflikt</span>
+                      <span className="text-xs opacity-60">6 godzin temu</span>
+                    </div>
+                    <p className="text-sm">
+                      "Między Gretą a Balinem rośnie napięcie. Polityka klanów karłów zaczyna wpływać na local business. 
+                      Ktoś będzie musiał to rozwiązać."
+                    </p>
+                    <div className="text-xs mt-2 opacity-80">
+                      Obserwacje: Stali bywalcy tawerny
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeModal && activeModal.startsWith('character-') && (
+                (() => {
+                  const characterId = activeModal.split('-')[1];
+                  const character = characters.find(c => c.id === characterId);
+                  return character ? (
+                    <div>
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="text-4xl">{getCharacterAvatar(character.id)}</div>
+                        <div>
+                          <h3 className="font-cinzel text-xl text-gold">{character.name}</h3>
+                          <p className="text-sm opacity-80">{character.race} {character.class}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="text-gold font-semibold mb-2">Historia</h4>
+                          <p className="text-sm">{character.background}</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-gold font-semibold mb-2">Osobowość</h4>
+                          <p className="text-sm">{character.personality}</p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="text-gold font-semibold mb-2">Styl Mówienia</h4>
+                          <p className="text-sm">{character.speakingStyle}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-6 pt-4 border-t border-gold border-opacity-30">
+                        <button
+                          onClick={() => {
+                            setSelectedCharacter(character.id);
+                            setActiveModal(null);
+                          }}
+                          className="w-full bg-gold text-charcoal py-3 px-4 rounded-lg font-crimson font-semibold hover:bg-yellow-400 transition-colors duration-300"
+                        >
+                          Rozpocznij Rozmowę z {character.name}
+                        </button>
+                      </div>
+                    </div>
+                  ) : <p>Postać nie znaleziona</p>;
+                })()
+              )}
             </div>
           </div>
         </div>
