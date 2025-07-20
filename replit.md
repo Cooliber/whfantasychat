@@ -1,8 +1,8 @@
-# Chronicles Podcast Portfolio - replit.md
+# Warhammer Fantasy Tavern - replit.md
 
 ## Overview
 
-This is a comprehensive React-based web application for showcasing podcast case studies with a medieval fantasy theme. The application serves as a portfolio website for documenting successful podcast strategies and campaigns, styled with a Warhammer Fantasy-inspired aesthetic.
+This is a comprehensive React-based web application that simulates an immersive Warhammer Fantasy tavern environment with AI-powered characters, real-time conversations, and multiplayer WebSocket integration. The application features 6+ distinct AI characters that engage in continuous live conversations using OpenAI's GPT-4o model, creating an authentic medieval fantasy tavern experience.
 
 ## User Preferences
 
@@ -22,22 +22,26 @@ Preferred communication style: Simple, everyday language.
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js server
 - **Language**: TypeScript with ES modules
-- **Database**: PostgreSQL with Drizzle ORM
-- **Database Provider**: Neon Database (serverless PostgreSQL)
-- **Session Management**: PostgreSQL-based sessions with connect-pg-simple
+- **AI Integration**: OpenAI GPT-4o for character conversations and personalities
+- **Real-time Communication**: WebSocket server for live tavern interactions
+- **Database**: PostgreSQL with Drizzle ORM (optional storage)
+- **Memory Storage**: In-memory storage for development and demo purposes
 
 ### Key Components
 
 #### Frontend Components
-1. **Portfolio System**: Case study display with filtering, modal views, and detailed analysis
-2. **Navigation**: Smooth scrolling single-page application with fixed header
-3. **Contact Form**: Lead capture with form validation and submission handling
-4. **UI Components**: Comprehensive component library based on Radix UI primitives
+1. **Live Tavern Interface**: Real-time conversation display with WebSocket integration
+2. **Scene Management**: Dynamic scene switching (Cichy Wieczór, Dzień Targowy, Noc Burzy)
+3. **Character Panel**: Interactive AI character selection and information display
+4. **Conversation System**: Live chat interface for player-character interactions
+5. **Connection Status**: Real-time WebSocket connection indicator
 
 #### Backend Components
-1. **API Routes**: RESTful endpoints for contact form submissions and case study data
-2. **Database Schema**: Structured data models for users, case studies, and contact submissions
-3. **Storage Layer**: Abstracted storage interface with in-memory implementation for development
+1. **Conversation Engine**: OpenAI-powered character personality system with unique speaking styles
+2. **WebSocket Server**: Real-time communication for live tavern conversations  
+3. **Character Management**: 6 distinct AI characters with individual personalities, backgrounds, and relationships
+4. **Auto-Conversation System**: Automated character interactions every 45 seconds
+5. **API Routes**: RESTful endpoints for character data and conversation generation
 
 #### Shared Components
 1. **Schema Definitions**: Shared TypeScript types and Zod validation schemas
@@ -45,12 +49,12 @@ Preferred communication style: Simple, everyday language.
 
 ## Data Flow
 
-1. **Client Requests**: Frontend makes API calls using TanStack React Query
-2. **Server Processing**: Express.js handles requests with proper error handling and validation
-3. **Data Validation**: Zod schemas ensure data integrity at API boundaries
-4. **Database Operations**: Drizzle ORM manages PostgreSQL interactions
-5. **State Management**: Zustand stores manage client-side application state
-6. **UI Updates**: React components re-render based on state changes
+1. **WebSocket Connection**: Client establishes real-time connection to tavern server
+2. **AI Character System**: OpenAI GPT-4o generates authentic character responses and conversations
+3. **Live Conversations**: Automated character interactions broadcast to all connected clients
+4. **Player Interactions**: Users can chat directly with AI characters in real-time
+5. **Scene Management**: Dynamic scene changes affect conversation context and atmosphere
+6. **State Synchronization**: Real-time updates keep all clients synchronized
 
 ## External Dependencies
 
@@ -58,6 +62,8 @@ Preferred communication style: Simple, everyday language.
 - React 18 ecosystem with TypeScript support
 - Vite for build tooling and development server
 - Express.js for backend API server
+- OpenAI SDK for AI character conversations
+- WebSocket (ws) for real-time communication
 
 ### Database and ORM
 - PostgreSQL database (configured for Neon serverless)
@@ -110,4 +116,24 @@ The monorepo structure separates concerns clearly:
 - `/shared` - Common types and schemas
 - Configuration files at root level for unified tooling
 
-This architecture enables rapid development while maintaining production readiness, with comprehensive type safety and modern development tooling throughout the stack.
+## Recent Changes (January 2025)
+
+✓ **AI Integration Complete**: Implemented OpenAI GPT-4o for character conversations
+✓ **WebSocket System**: Real-time communication for live tavern interactions  
+✓ **Character Personalities**: 6 distinct AI characters with unique speaking styles
+✓ **Auto-Conversations**: Characters talk automatically every 45 seconds
+✓ **Live Chat Interface**: Players can interact directly with AI characters
+✓ **Scene-Based Context**: Conversations adapt to current tavern scene
+✓ **Polish Language Support**: Medieval fantasy terminology and authentic dialogue
+
+## AI Character System
+
+### Featured Characters
+1. **Wilhelm von Schreiber** - Empire Scholar with formal speaking style
+2. **Greta Żelazna Kuźnia** - Dwarf Blacksmith with practical, direct personality
+3. **Aelindra Szept Księżyca** - Elf Mage speaking in poetic, nature-focused riddles
+4. **Marcus Steiner** - Empire Scout with military terminology and paranoid observations
+5. **Lorenzo Złota Ręka** - Tilean Merchant with charming, calculating business focus
+6. **Balin Poszukiwacz Złota** - Dwarf Merchant with traditional clan-focused personality
+
+This architecture enables immersive fantasy roleplay experiences with comprehensive AI integration, real-time multiplayer functionality, and authentic Warhammer Fantasy atmosphere.
