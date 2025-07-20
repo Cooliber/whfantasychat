@@ -1,0 +1,93 @@
+Create "Warhammer Fantasy Tavern" - a comprehensive React-based web application that simulates an immersive fantasy tavern environment with AI-powered character interactions, building upon the established Suplementor V2 architecture and development patterns.
+
+**Project Structure & Setup:**
+- Initialize new React 18 + TypeScript project using Vite (following Suplementor V2 patterns)
+- Implement folder structure: `/src/components/tavern/`, `/src/stores/tavernStore.ts`, `/src/types/warhammer.types.ts`
+- Use established UI component library from Suplementor V2 as base, extending with tavern-specific components
+- Configure Tailwind CSS with custom Warhammer Fantasy color palette and typography
+
+**Character System Implementation (Priority 1):**
+- Define 17 specific Warhammer Fantasy characters with exact specifications:
+  * 3 Empire characters: Captain Marcus Steiner (soldier), Wilhelm the Scribe (scholar), Greta Ironforge (blacksmith)
+  * 3 Dwarf characters: Thorek Ironbeard (ranger), Balin Goldseeker (merchant), Grimm Oathkeeper (warrior)
+  * 3 Elf characters: Aelindra Moonwhisper (high elf mage), Silvyr Swiftarrow (wood elf scout), Malekith's Exile (dark elf rogue)
+  * 3 Halfling characters: Rosie Greenhill (innkeeper), Pip Lightfingers (burglar), Merry Goodbarrel (cook)
+  * 3 Human variants: Bretonnian Knight Sir Gaston, Tilean Merchant Lorenzo, Norse Berserker Erik
+  * 2 Unique characters: Witch Hunter Saltzpyre, Bright Wizard Sienna
+- Create character data structure with: name, race, class, personality traits (5 key traits), backstory (200 words), speech patterns (dialect, vocabulary, tone), relationship matrix with other characters
+- Implement character personality engine using LLM prompts with specific instructions for each character's voice and behavior
+
+**Real-Time Conversation System (Priority 2):**
+- Build multi-agent conversation engine where characters initiate discussions based on:
+  * Time-based triggers (every 2-5 minutes)
+  * Topic relevance scores (characters more likely to engage with familiar topics)
+  * Relationship dynamics (friends/rivals more likely to interact)
+  * Current tavern "mood" (peaceful, tense, celebratory)
+- Implement conversation flow manager that:
+  * Prevents simultaneous speaking (queue system)
+  * Maintains topic coherence for 3-7 message exchanges
+  * Introduces natural conversation breaks and topic transitions
+  * Generates contextually appropriate responses using character-specific LLM prompts
+- Create conversation memory system using IndexedDB with schema for: timestamp, participants, topic tags, emotional tone, plot relevance score
+
+**Story Generation & Persistence (Priority 3):**
+- Implement dynamic story hook generator that creates:
+  * Quest rumors (treasure locations, monster sightings, political intrigue)
+  * Character backstory reveals (gradually disclosed through conversations)
+  * Ongoing plot threads (wars, festivals, mysterious events)
+  * Relationship developments (friendships, rivalries, romances)
+- Build persistent memory system that:
+  * Saves all conversations with full context
+  * Tracks character relationship evolution over time
+  * Maintains continuity of story threads across sessions
+  * Allows characters to reference past events and conversations
+
+**Technical Implementation Details:**
+- State Management: Use Zustand for tavern state (active characters, current conversations, story threads)
+- API Integration: Implement LLM service layer with character-specific prompt templates and conversation context management
+- Real-time Updates: Use WebSocket or Server-Sent Events for live conversation updates (simulate with setTimeout for MVP)
+- Data Persistence: IndexedDB wrapper for conversation history, character states, and story progression
+- Performance: Implement conversation pagination, lazy loading for history, and optimized re-rendering
+
+**UI/UX Specifications:**
+- Color Palette: Primary #2D2D2D (charcoal backgrounds), Secondary #8B4513 (wood elements), Accent #DAA520 (gold highlights), Text #F5F5DC (parchment)
+- Typography: 'Cinzel' for headings (medieval feel), 'Crimson Text' for character dialogue, 'Inter' for UI elements
+- Layout Components:
+  * Main conversation area (60% width) with scrollable message history
+  * Character panel (25% width) showing active speakers with portraits and status
+  * Story threads sidebar (15% width) with current plot hooks and rumors
+  * Bottom toolbar with conversation controls and export options
+- Character Dialogue Design: Unique color-coded speech bubbles, character portraits (placeholder images initially), typing indicators for active speakers
+
+**Core Features Implementation:**
+- Conversation Browser: Filterable history by character, date range, topic tags, story relevance
+- Search System: Full-text search across all conversations with highlighting
+- Export Functionality: Generate PDF summaries, plain text exports, JSON data for external tools
+- Character Relationship Visualization: Interactive network graph showing relationship strengths and types
+- Tavern Chronicle: Timeline view of major story events and character developments
+
+**Mobile Optimization & Accessibility:**
+- Responsive breakpoints: Mobile-first design with collapsible sidebars on screens <768px
+- Touch interactions: Swipe gestures for navigation, tap-to-expand character details
+- Accessibility: ARIA labels for all interactive elements, keyboard navigation support, high contrast mode toggle
+- Polish Language Support: Complete translation using react-i18next with fantasy-appropriate terminology
+
+**Development Phases:**
+Phase 1 (Week 1): Character system, basic conversation UI, LLM integration
+Phase 2 (Week 2): Real-time conversation engine, memory persistence, story generation
+Phase 3 (Week 3): Advanced features (search, export, relationship maps), mobile optimization
+Phase 4 (Week 4): Polish language support, accessibility improvements, performance optimization
+
+**Success Criteria:**
+- 17 distinct characters with unique personalities engage in coherent conversations
+- Conversations persist across browser sessions with full context
+- Story threads develop organically and remain consistent over time
+- Mobile-responsive interface works smoothly on devices 320px+ width
+- Export functionality generates usable content for Game Masters
+- Application loads within 3 seconds and maintains 60fps during conversations
+
+**Technical Constraints:**
+- Use existing Suplementor V2 component library and patterns where applicable
+- Implement offline-first approach with graceful degradation when API unavailable
+- Ensure conversation history doesn't exceed browser storage limits (implement cleanup strategies)
+- Optimize LLM API calls to minimize costs while maintaining conversation quality
