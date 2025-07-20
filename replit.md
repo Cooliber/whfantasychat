@@ -1,4 +1,4 @@
-# Warhammer Fantasy Tavern - replit.md
+# Warhammer Fantasy Tavern - Deployment Guide
 
 ## Overview
 
@@ -88,10 +88,11 @@ Preferred communication style: Simple, everyday language.
 - tsx for running TypeScript server code directly
 - Concurrent development of frontend and backend
 
-### Production Build Process
+### Netlify Production Deployment
 1. **Frontend Build**: Vite builds React app to `dist/public`
-2. **Backend Build**: esbuild bundles server code to `dist/index.js`
-3. **Static Serving**: Express serves built frontend from `/dist/public`
+2. **Serverless Functions**: API routes deployed as Netlify Functions
+3. **Static Hosting**: Frontend served from Netlify CDN
+4. **Environment Variables**: Configured in Netlify dashboard
 
 ### Database Management
 - Environment-based DATABASE_URL configuration
@@ -103,10 +104,11 @@ Preferred communication style: Simple, everyday language.
 - Production: NODE_ENV=production with optimized builds
 - Database URL required for all environments
 
-### Replit-Specific Features
-- Runtime error overlay for development debugging
-- Cartographer plugin for enhanced development experience
-- Replit dev banner for external access indication
+### Netlify Deployment Features
+- Serverless functions for API routes
+- Automatic builds from Git repository
+- Environment variable management
+- CDN distribution for optimal performance
 
 ## Project Structure Rationale
 

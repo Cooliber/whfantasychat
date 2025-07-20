@@ -15,11 +15,33 @@ export type CharacterRace =
   | 'Tilean' 
   | 'Norse';
 
-export type CharacterClass = 
+export type CharacterClass =
   | 'Soldier' | 'Scholar' | 'Blacksmith' | 'Ranger' | 'Merchant'
   | 'Warrior' | 'Mage' | 'Scout' | 'Rogue' | 'Innkeeper'
-  | 'Burglar' | 'Cook' | 'Knight' | 'Berserker' 
-  | 'Witch Hunter' | 'Wizard';
+  | 'Burglar' | 'Cook' | 'Knight' | 'Berserker'
+  | 'Witch Hunter' | 'Wizard' | 'Technomancer' | 'Cyber-Knight'
+  | 'Digital Alchemist' | 'Quantum Scribe' | 'Nano-Smith' | 'Bio-Engineer';
+
+// Enhanced Character Customization Types
+export type WeaponType =
+  | 'Sword' | 'Axe' | 'Mace' | 'Bow' | 'Crossbow' | 'Staff' | 'Dagger'
+  | 'Plasma Blade' | 'Laser Rifle' | 'Nano-Sword' | 'Quantum Staff'
+  | 'Bio-Weapon' | 'Neural Disruptor' | 'Cyber-Hammer' | 'Digital Bow';
+
+export type ArmorType =
+  | 'Leather' | 'Chain Mail' | 'Plate' | 'Robes' | 'Light Armor'
+  | 'Power Armor' | 'Nano-Mesh' | 'Bio-Suit' | 'Quantum Shield'
+  | 'Cyber-Plate' | 'Digital Cloak' | 'Neural Interface Suit';
+
+export type CyberneticType =
+  | 'Neural Implant' | 'Cyber Eye' | 'Mechanical Arm' | 'Data Port'
+  | 'Memory Enhancer' | 'Reflex Booster' | 'Bio-Scanner' | 'Quantum Processor'
+  | 'Nano-Blood' | 'Digital Soul' | 'Techno-Heart' | 'Cyber-Brain';
+
+export type TechnologyType =
+  | 'Alchemy Kit' | 'Scrying Crystal' | 'Enchanted Tools' | 'Healing Potions'
+  | 'Quantum Computer' | 'Nano-Fabricator' | 'Bio-Lab' | 'Neural Network'
+  | 'Holographic Projector' | 'Time Dilator' | 'Matter Compiler' | 'AI Assistant';
 
 export interface TavernCharacterData {
   id: string;
@@ -41,6 +63,48 @@ export interface TavernCharacterData {
   equipment: string[];
   secrets: string[];
   goals: string[];
+
+  // Enhanced Customization Options
+  appearance?: {
+    height: string;
+    build: 'Slim' | 'Average' | 'Muscular' | 'Heavy' | 'Cybernetic';
+    eyeColor: string;
+    hairColor: string;
+    distinguishingMarks: string[];
+    cyberneticVisibility: 'Hidden' | 'Subtle' | 'Obvious' | 'Dominant';
+  };
+
+  weapons?: WeaponType[];
+  armor?: ArmorType[];
+  cybernetics?: CyberneticType[];
+  technology?: TechnologyType[];
+
+  // Advanced Character Stats
+  attributes?: {
+    strength: number;
+    dexterity: number;
+    intelligence: number;
+    charisma: number;
+    techAffinity: number;
+    magicResistance: number;
+  };
+
+  // Background Enhancement
+  origin?: {
+    birthplace: string;
+    socialClass: 'Noble' | 'Merchant' | 'Artisan' | 'Peasant' | 'Outcast' | 'Cyber-Enhanced';
+    education: string;
+    formativeEvent: string;
+  };
+
+  // Narrative Hooks
+  questHooks?: string[];
+  rumors?: string[];
+  connections?: {
+    characterId: string;
+    relationship: string;
+    sharedHistory: string;
+  }[];
 }
 
 export interface ConversationMessage {
