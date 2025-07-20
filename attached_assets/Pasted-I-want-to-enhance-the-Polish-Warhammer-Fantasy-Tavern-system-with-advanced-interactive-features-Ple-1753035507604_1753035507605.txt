@@ -1,0 +1,36 @@
+I want to enhance the Polish Warhammer Fantasy Tavern system with advanced interactive features. Please implement the following specific improvements:
+
+**Primary Enhancement Request:**
+Add an innovative drag-and-drop interface system with the following components:
+
+1. **Dynamic Participant Management:**
+   - Create a drag-and-drop interface that allows users to dynamically add or remove AI characters from active conversations
+   - Implement visual character cards that can be dragged into/out of an "Active Conversation" zone
+   - Show real-time participant count and update conversation dynamics based on active participants
+   - Ensure all interactions remain in Polish language
+
+2. **Configurable Response Timing:**
+   - Replace the fixed 45-second AI response interval with an adjustable slider control
+   - Implement a range slider (e.g., 15-120 seconds) with Polish labels
+   - Allow real-time adjustment of conversation pace without restarting the application
+   - Display current timing setting in Polish (e.g., "Częstotliwość odpowiedzi: 45 sekund")
+
+3. **Enhanced Functionality Features:**
+   - Add conversation history panel that can be toggled on/off
+   - Implement character mood indicators that affect their speaking style
+   - Create conversation themes/topics that users can select to influence AI responses
+   - Add sound effects and ambient tavern sounds with volume controls
+
+**Technical Requirements:**
+- Maintain full Polish language support throughout all new features
+- Ensure the drag-and-drop interface is touch-friendly for mobile devices
+- Keep the medieval Warhammer Fantasy aesthetic in all UI elements
+- Preserve existing character personalities and speaking patterns
+
+**Context Integration:**
+Since we have the ar-experience.ts file open and have been working on Phase 6 Digital Enlightenment, please clarify if you want these enhancements:
+- Integrated into the current Phase 6 system as an AR tavern experience
+- Developed as a standalone enhanced Warhammer Fantasy Tavern application
+- Combined with AR capabilities for an immersive 3D tavern environment
+
+Please implement these features with focus on user experience and Polish language authenticity.

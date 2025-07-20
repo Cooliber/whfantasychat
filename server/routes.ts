@@ -89,6 +89,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     ws: WebSocket;
     id: string;
     currentScene: string;
+    activeParticipants?: string[];
+    conversationTheme?: string;
+    responseInterval?: number;
   }
 
   const clients = new Set<TavernClient>();
@@ -131,6 +134,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
             
           case 'send-message':
             await handlePlayerMessage(message, client);
+            break;
+            
+          case 'update-participants':
+            if (message.participantIds) {
+              client.activeParticipants = message.participantIds;
+              client.conversationTheme = message.theme || 'ogólny';
+              client.responseInterval = message.responseInterval || 45;
+              console.log(`Updated participants for ${client.id}:`, message.participantIds);
+            }
+            break;
+
+          case 'update-timing':
+            if (message.responseInterval) {
+              client.responseInterval = message.responseInterval;
+              console.log(`Updated response interval to ${message.responseInterval}s for ${client.id}`);
+            }
+            break;
+
+          case 'update-theme':
+            if (message.theme) {
+              client.conversationTheme = message.theme;
+              console.log(`Updated conversation theme to ${message.theme} for ${client.id}`);
+            }
             break;
         }
       } catch (error) {
