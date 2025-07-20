@@ -1,10 +1,10 @@
 [build]
   # Build command for the full-stack application
-  command = "npm run build"
-  
+  command = "npm run build && npm run build:functions"
+
   # Directory to publish (contains the built frontend)
   publish = "dist/public"
-  
+
   # Functions directory for serverless functions
   functions = "netlify/functions"
 
