@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Send, MessageSquare, Clock, User } from 'lucide-react';
 import { useTavernStore, useActiveConversation } from '../../stores/tavernStore';
 import { ConversationMessage } from '../../types/warhammer.types';
+import CharacterAvatar from './CharacterAvatar';
 
 export function ConversationArea() {
   const [newMessage, setNewMessage] = useState('');
@@ -157,13 +158,14 @@ export function ConversationArea() {
             }`}
           >
             {/* Avatar */}
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-xl ${
-              message.characterId === 'player' 
-                ? 'bg-gold text-charcoal' 
-                : 'bg-wood text-parchment'
-            }`}>
-              {getCharacterAvatar(message.characterId)}
-            </div>
+            <CharacterAvatar
+              characterId={message.characterId}
+              name={getCharacterName(message.characterId)}
+              race={message.characterId !== 'player' ? getCharacterById(message.characterId)?.race : undefined}
+              characterClass={message.characterId !== 'player' ? getCharacterById(message.characterId)?.characterClass : undefined}
+              size="md"
+              showBorder={true}
+            />
             
             {/* Message bubble */}
             <div className={`max-w-xs lg:max-w-md ${

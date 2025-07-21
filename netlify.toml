@@ -1,6 +1,6 @@
 [build]
   # Build command for the full-stack application
-  command = "npm run build && npm run build:functions"
+  command = "npm install && npm run build"
 
   # Directory to publish (contains the built frontend)
   publish = "dist/public"
@@ -11,14 +11,23 @@
 [build.environment]
   # Node.js version
   NODE_VERSION = "20"
-  
+
   # Build environment
   NODE_ENV = "production"
+
+  # Enable TypeScript compilation for functions
+  NPM_FLAGS = "--production=false"
 
 # Redirect all API routes to serverless functions
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# WebSocket fallback endpoint
+[[redirects]]
+  from = "/ws"
+  to = "/.netlify/functions/websocket-fallback"
   status = 200
 
 # SPA fallback - redirect all other routes to index.html

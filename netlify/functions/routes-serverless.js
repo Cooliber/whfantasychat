@@ -1,7 +1,3 @@
-// netlify/functions/api.ts
-import express from "express";
-import serverless from "serverless-http";
-
 // server/storage.ts
 var MemStorage = class {
   users;
@@ -602,8 +598,8 @@ var conversationEngine = new ConversationEngine();
 
 // netlify/functions/routes-serverless.ts
 var conversationPolling = /* @__PURE__ */ new Map();
-function registerServerlessRoutes(app2) {
-  app2.post("/api/contact", async (req, res) => {
+function registerServerlessRoutes(app) {
+  app.post("/api/contact", async (req, res) => {
     try {
       const validatedData = insertContactSubmissionSchema.parse(req.body);
       const submission = await storage.createContactSubmission(validatedData);
@@ -616,7 +612,7 @@ function registerServerlessRoutes(app2) {
       res.status(500).json({ error: "Internal server error" });
     }
   });
-  app2.get("/api/contact", async (req, res) => {
+  app.get("/api/contact", async (req, res) => {
     try {
       const submissions = await storage.getAllContactSubmissions();
       res.json(submissions);
@@ -624,7 +620,7 @@ function registerServerlessRoutes(app2) {
       res.status(500).json({ error: "Internal server error" });
     }
   });
-  app2.post("/api/tavern/generate-conversation", async (req, res) => {
+  app.post("/api/tavern/generate-conversation", async (req, res) => {
     try {
       const { scene, atmosphere, participantIds, conversationHistory, recentEvents } = req.body;
       const context = {
@@ -641,7 +637,7 @@ function registerServerlessRoutes(app2) {
       res.status(500).json({ error: "Failed to generate conversation" });
     }
   });
-  app2.post("/api/tavern/character-response", async (req, res) => {
+  app.post("/api/tavern/character-response", async (req, res) => {
     try {
       const { characterId, prompt, scene, atmosphere } = req.body;
       const context = {
@@ -662,7 +658,7 @@ function registerServerlessRoutes(app2) {
       res.status(500).json({ error: "Failed to generate character response" });
     }
   });
-  app2.get("/api/tavern/characters", async (req, res) => {
+  app.get("/api/tavern/characters", async (req, res) => {
     try {
       const characters = await storage.getAllCharacters();
       res.json({ characters });
@@ -671,7 +667,7 @@ function registerServerlessRoutes(app2) {
       res.status(500).json({ error: "Failed to fetch characters" });
     }
   });
-  app2.get("/api/tavern/characters/:id", async (req, res) => {
+  app.get("/api/tavern/characters/:id", async (req, res) => {
     try {
       const character = await storage.getCharacterById(req.params.id);
       if (!character) {
@@ -684,7 +680,7 @@ function registerServerlessRoutes(app2) {
       res.status(500).json({ error: "Failed to fetch character" });
     }
   });
-  app2.get("/api/tavern/poll/:clientId", async (req, res) => {
+  app.get("/api/tavern/poll/:clientId", async (req, res) => {
     try {
       const clientId = req.params.clientId;
       const lastMessageId = req.query.lastMessageId;
@@ -701,7 +697,7 @@ function registerServerlessRoutes(app2) {
       res.status(500).json({ error: "Failed to poll for updates" });
     }
   });
-  app2.post("/api/tavern/start-conversation", async (req, res) => {
+  app.post("/api/tavern/start-conversation", async (req, res) => {
     try {
       const { clientId, scene, participantIds, theme } = req.body;
       const context = {
@@ -733,7 +729,7 @@ function registerServerlessRoutes(app2) {
       res.status(500).json({ error: "Failed to start conversation" });
     }
   });
-  app2.post("/api/tavern/send-message", async (req, res) => {
+  app.post("/api/tavern/send-message", async (req, res) => {
     try {
       const { clientId, characterId, prompt, scene } = req.body;
       const context = {
@@ -768,7 +764,7 @@ function registerServerlessRoutes(app2) {
       res.status(500).json({ error: "Failed to send message" });
     }
   });
-  app2.get("/api/tavern/story-threads", async (req, res) => {
+  app.get("/api/tavern/story-threads", async (req, res) => {
     try {
       const threads = await storage.getAllStoryThreads();
       res.json({ threads });
@@ -777,7 +773,7 @@ function registerServerlessRoutes(app2) {
       res.status(500).json({ error: "Failed to fetch story threads" });
     }
   });
-  app2.get("/api/tavern/gossip", async (req, res) => {
+  app.get("/api/tavern/gossip", async (req, res) => {
     try {
       const gossip = await storage.getAllGossipItems();
       res.json({ gossip });
@@ -786,7 +782,7 @@ function registerServerlessRoutes(app2) {
       res.status(500).json({ error: "Failed to fetch gossip" });
     }
   });
-  app2.get("/api/tavern/scenes", async (req, res) => {
+  app.get("/api/tavern/scenes", async (req, res) => {
     try {
       const scenes = await storage.getAllScenes();
       res.json({ scenes });
@@ -795,7 +791,7 @@ function registerServerlessRoutes(app2) {
       res.status(500).json({ error: "Failed to fetch scenes" });
     }
   });
-  app2.get("/api/health", (req, res) => {
+  app.get("/api/health", (req, res) => {
     res.json({
       status: "healthy",
       timestamp: (/* @__PURE__ */ new Date()).toISOString(),
@@ -813,43 +809,6 @@ function getSceneAtmosphere(scene) {
   };
   return atmospheres[scene] || "Spokojny, przyjazny";
 }
-
-// netlify/functions/api.ts
-var app = express();
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: false, limit: "10mb" }));
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  const allowedOrigins = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://warhammer-fantasy-chat.netlify.app",
-    process.env.URL,
-    process.env.DEPLOY_PRIME_URL
-  ].filter(Boolean);
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-  }
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-  if (req.method === "OPTIONS") {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-});
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`, req.body ? Object.keys(req.body) : "no body");
-  next();
-});
-registerServerlessRoutes(app);
-app.use((err, req, res, next) => {
-  const status = err.status || err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
-  res.status(status).json({ message });
-});
-var handler = serverless(app);
 export {
-  handler
+  registerServerlessRoutes
 };

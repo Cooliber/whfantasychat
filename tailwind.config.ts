@@ -61,6 +61,39 @@ export default {
           border: "var(--sidebar-border)",
           ring: "var(--sidebar-ring)",
         },
+        // Warhammer Fantasy Theme Colors
+        charcoal: "var(--charcoal)",
+        wood: "var(--wood)",
+        gold: "var(--gold)",
+        parchment: "var(--parchment)",
+        forest: "var(--forest)",
+        crimson: "var(--crimson)",
+        // Additional Warhammer Fantasy Colors
+        empire: {
+          red: "hsl(0, 70%, 45%)",
+          gold: "hsl(45, 85%, 55%)",
+          blue: "hsl(220, 60%, 40%)",
+        },
+        bretonnian: {
+          blue: "hsl(210, 80%, 35%)",
+          white: "hsl(0, 0%, 95%)",
+          gold: "hsl(50, 90%, 60%)",
+        },
+        dwarf: {
+          bronze: "hsl(30, 60%, 35%)",
+          steel: "hsl(210, 15%, 25%)",
+          gem: "hsl(280, 70%, 50%)",
+        },
+        elven: {
+          silver: "hsl(210, 20%, 80%)",
+          green: "hsl(120, 40%, 35%)",
+          blue: "hsl(200, 60%, 45%)",
+        },
+        chaos: {
+          black: "hsl(0, 0%, 10%)",
+          red: "hsl(0, 80%, 30%)",
+          purple: "hsl(280, 60%, 25%)",
+        },
       },
       keyframes: {
         "accordion-down": {

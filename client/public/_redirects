@@ -1,0 +1,15 @@
+# Netlify redirects for Warhammer Fantasy Chat
+
+# API routes to Netlify Functions
+/api/*  /.netlify/functions/api/:splat  200
+
+# WebSocket fallback - redirect to polling endpoint
+/ws  /.netlify/functions/websocket-fallback  200
+
+# Static assets - serve directly
+/assets/*  /assets/:splat  200
+/images/*  /images/:splat  200
+/fonts/*  /fonts/:splat  200
+
+# SPA fallback - all other routes go to index.html
+/*  /index.html  200

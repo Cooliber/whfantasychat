@@ -5,12 +5,14 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development tsx server/index.ts",
-    "build": "vite build",
-    "build:functions": "esbuild netlify/functions/api.ts --platform=node --packages=external --bundle --format=esm --outdir=netlify/functions --out-extension:.js=.js",
+    "build": "vite build && npm run build:functions",
+    "build:functions": "esbuild netlify/functions/*.ts --platform=node --packages=external --bundle --format=esm --outdir=netlify/functions --out-extension:.js=.js --external:@netlify/functions",
     "start": "NODE_ENV=production node dist/index.js",
     "preview": "vite preview",
     "check": "tsc",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "netlify:dev": "netlify dev",
+    "netlify:build": "npm run build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

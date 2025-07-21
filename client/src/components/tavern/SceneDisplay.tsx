@@ -20,17 +20,17 @@ export function SceneDisplay({ scene }: SceneDisplayProps) {
   const getSceneImage = (sceneName: string) => {
     switch (sceneName) {
       case 'Cichy Wieczór':
-        return 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600';
+        return 'https://cdn.pixabay.com/photo/2025/06/07/04/59/medieval-tavern-9645918_1280.png';
       case 'Dzień Targowy':
-        return 'https://images.unsplash.com/photo-1595846519845-68e85c0c9788?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600';
+        return 'https://cdn.pixabay.com/photo/2019/02/19/23/14/fairy-4008036_1280.png';
       case 'Noc Burzy':
-        return 'https://images.unsplash.com/photo-1500740516770-92bd004b996e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600';
+        return 'https://cdn.pixabay.com/photo/2025/07/13/07/30/ai-generated-9711734_1280.png';
       case 'Świętowanie Festiwalu':
-        return 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600';
+        return 'https://cdn.pixabay.com/photo/2019/02/19/23/14/fairy-4008036_1280.png';
       case 'Tajemnicze Zgromadzenie':
-        return 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600';
+        return 'https://cdn.pixabay.com/photo/2025/06/07/04/59/medieval-tavern-9645918_1280.png';
       default:
-        return 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600';
+        return 'https://cdn.pixabay.com/photo/2025/06/07/04/59/medieval-tavern-9645918_1280.png';
     }
   };
 

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Crown, Users, MessageCircle, Scroll, Send, Wifi, WifiOff, Settings, Volume2, History, Timer, Trash2, Plus, Cpu, Lightbulb } from 'lucide-react';
 import { Link } from 'wouter';
+import { netlifyWebSocketService } from '../services/netlifyWebSocketService';
 
 interface ConversationMessage {
   characterId: string;
@@ -33,7 +34,6 @@ export default function LiveTavern() {
   const [ambientVolume, setAmbientVolume] = useState(50);
   const [draggedCharacter, setDraggedCharacter] = useState<string | null>(null);
   const [apiProvider, setApiProvider] = useState<'openai' | 'openrouter'>('openai');
-  const wsRef = useRef<WebSocket | null>(null);
   const conversationRef = useRef<HTMLDivElement>(null);
 
   const scenes = [
@@ -41,59 +41,57 @@ export default function LiveTavern() {
       name: 'Cichy Wieczór',
       description: 'Spokojny wieczór w tawernie. Płomyki świec migocą w ciemności, a tylko nieliczni goście siedzą przy drewnianych stołach.',
       atmosphere: 'Spokojny, intymny, tajemniczy',
-      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600'
+      image: 'https://cdn.pixabay.com/photo/2025/06/07/04/59/medieval-tavern-9645918_1280.png'
     },
     {
-      name: 'Dzień Targowy', 
+      name: 'Dzień Targowy',
       description: 'Tawerna tętni życiem w dzień targowy. Kupcy, rzemieślnicy i podróżnicy wypełniają każdy kąt.',
       atmosphere: 'Energiczny, hałaśliwy, handlowy',
-      image: 'https://images.unsplash.com/photo-1595846519845-68e85c0c9788?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600'
+      image: 'https://cdn.pixabay.com/photo/2019/02/19/23/14/fairy-4008036_1280.png'
     },
     {
       name: 'Noc Burzy',
       description: 'Dzika burza szaleje na zewnątrz, a błyskawice oświetlają okna tawerny.',
-      atmosphere: 'Dramatyczny, solidarny, przygodowy', 
-      image: 'https://images.unsplash.com/photo-1500740516770-92bd004b996e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=600'
+      atmosphere: 'Dramatyczny, solidarny, przygodowy',
+      image: 'https://cdn.pixabay.com/photo/2025/07/13/07/30/ai-generated-9711734_1280.png'
     }
   ];
 
-  // Initialize WebSocket connection
+  // Initialize Netlify WebSocket service
   useEffect(() => {
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws`;
-    
-    try {
-      const ws = new WebSocket(wsUrl);
-      wsRef.current = ws;
-
-      ws.onopen = () => {
-        console.log('Connected to tavern WebSocket');
+    const initializeConnection = async () => {
+      try {
+        await netlifyWebSocketService.connect();
         setWsConnected(true);
-      };
 
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        handleWebSocketMessage(data);
-      };
+        // Set up event handlers
+        netlifyWebSocketService.on('welcome', (data) => {
+          console.log('Welcome to tavern:', data.message);
+        });
 
-      ws.onclose = () => {
-        console.log('Disconnected from tavern WebSocket');
+        netlifyWebSocketService.on('auto-conversation', (data) => {
+          handleWebSocketMessage(data);
+        });
+
+        netlifyWebSocketService.on('conversation-started', (data) => {
+          handleWebSocketMessage(data);
+        });
+
+        netlifyWebSocketService.on('character-response', (data) => {
+          handleWebSocketMessage(data);
+        });
+
+      } catch (error) {
+        console.error('Failed to connect to WebSocket service:', error);
         setWsConnected(false);
-      };
+      }
+    };
 
-      ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
-        setWsConnected(false);
-      };
-
-    } catch (error) {
-      console.error('Failed to connect to WebSocket:', error);
-    }
+    initializeConnection();
 
     return () => {
-      if (wsRef.current) {
-        wsRef.current.close();
-      }
+      netlifyWebSocketService.disconnect();
+      setWsConnected(false);
     };
   }, []);
 
@@ -152,50 +150,61 @@ export default function LiveTavern() {
     }
   };
 
-  const sendSceneChange = (scene: string) => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({
-        type: 'scene-change',
-        scene: scene
-      }));
-    }
-    setCurrentScene(scene);
-  };
-
-  const sendUserMessage = () => {
-    if (!userMessage.trim() || !selectedCharacter || !wsRef.current) return;
-
-    if (wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({
-        type: 'send-message',
-        characterId: selectedCharacter,
-        prompt: userMessage
-      }));
-
-      // Add user message to conversation
-      setConversations(prev => [...prev, {
-        characterId: 'player',
-        message: userMessage,
-        timestamp: new Date()
-      }]);
-
-      setUserMessage('');
+  const sendSceneChange = async (scene: string) => {
+    try {
+      if (netlifyWebSocketService.getConnectionStatus()) {
+        await netlifyWebSocketService.sendMessage({
+          type: 'scene-change',
+          scene: scene
+        });
+      }
+      setCurrentScene(scene);
+    } catch (error) {
+      console.error('Failed to send scene change:', error);
     }
   };
 
-  const startConversation = () => {
-    if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
+  const sendUserMessage = async () => {
+    if (!userMessage.trim() || !selectedCharacter) return;
 
-    const randomCharacters = characters
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 2 + Math.floor(Math.random() * 2));
+    try {
+      if (netlifyWebSocketService.getConnectionStatus()) {
+        await netlifyWebSocketService.sendPlayerMessage(
+          selectedCharacter,
+          userMessage,
+          currentScene
+        );
 
-    wsRef.current.send(JSON.stringify({
-      type: 'start-conversation',
-      participantIds: randomCharacters.map(c => c.id),
-      recentEvents: ['Player joined the conversation'],
-      conversationHistory: conversations.slice(-5)
-    }));
+        // Add user message to conversation
+        setConversations(prev => [...prev, {
+          characterId: 'player',
+          message: userMessage,
+          timestamp: new Date()
+        }]);
+
+        setUserMessage('');
+      }
+    } catch (error) {
+      console.error('Failed to send user message:', error);
+    }
+  };
+
+  const startConversation = async () => {
+    if (!netlifyWebSocketService.getConnectionStatus()) return;
+
+    try {
+      const randomCharacters = characters
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 2 + Math.floor(Math.random() * 2));
+
+      await netlifyWebSocketService.startConversation(
+        currentScene,
+        randomCharacters.map(c => c.id),
+        conversationTheme
+      );
+    } catch (error) {
+      console.error('Failed to start conversation:', error);
+    }
   };
 
   const getCharacterById = (id: string) => {
@@ -259,39 +268,51 @@ export default function LiveTavern() {
     setDraggedCharacter(null);
   };
 
-  const updateConversationParticipants = (participants: string[]) => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({
-        type: 'update-participants',
-        participantIds: participants,
-        theme: conversationTheme,
-        responseInterval: responseInterval
-      }));
+  const updateConversationParticipants = async (participants: string[]) => {
+    try {
+      if (netlifyWebSocketService.getConnectionStatus()) {
+        await netlifyWebSocketService.sendMessage({
+          type: 'update-participants',
+          participantIds: participants,
+          theme: conversationTheme,
+          responseInterval: responseInterval
+        });
+      }
+    } catch (error) {
+      console.error('Failed to update participants:', error);
     }
   };
 
-  const updateResponseInterval = (newInterval: number) => {
+  const updateResponseInterval = async (newInterval: number) => {
     setResponseInterval(newInterval);
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({
-        type: 'update-timing',
-        responseInterval: newInterval
-      }));
+    try {
+      if (netlifyWebSocketService.getConnectionStatus()) {
+        await netlifyWebSocketService.sendMessage({
+          type: 'update-timing',
+          responseInterval: newInterval
+        });
+      }
+    } catch (error) {
+      console.error('Failed to update response interval:', error);
     }
   };
 
-  const updateConversationTheme = (newTheme: string) => {
+  const updateConversationTheme = async (newTheme: string) => {
     setConversationTheme(newTheme);
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(JSON.stringify({
-        type: 'update-theme',
-        theme: newTheme
-      }));
+    try {
+      if (netlifyWebSocketService.getConnectionStatus()) {
+        await netlifyWebSocketService.sendMessage({
+          type: 'update-theme',
+          theme: newTheme
+        });
+      }
+    } catch (error) {
+      console.error('Failed to update conversation theme:', error);
     }
   };
 
   return (
-    <div className="min-h-screen bg-charcoal text-parchment">
+    <div className="min-h-screen bg-charcoal text-parchment tavern-atmosphere">
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 glass-morphism border-b border-gold border-opacity-20">
         <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
